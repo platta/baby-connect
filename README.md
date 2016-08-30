@@ -1,3 +1,27 @@
+# Baby Connect Project
+This repository contains one part of a multi-part project to enable the
+automation of adding data to the [Baby Connect](https://www.baby-connect.com)
+service.
+
+The flow is:
+
+- User presses an AWS IoT Button.
+- The IoT Button triggers an AWS Lambda function
+([baby-connect-lambda](https://github.com/platta/baby-connect-lambda)).
+- The Lambda function sends a message to an AWS SQS message queue.
+- A Raspberry Pi running a listener
+([baby-connect-sqs-listener](https://github.com/platta/baby-connect-sqs-listener))
+receives the message from the message queue.
+- The listener uses a library
+(__baby-connect__) to log into the Baby
+Connect web site and add the data.
+
+Since Baby Connect doesn't expose an API, the
+([baby-connect](https://github.com/platta/baby-connect)) library uses browser
+automation. This requires launching chromium as a child process which is not
+supported in Lambda and is the reason we use a message queue with a standalone
+listener application.
+
 # baby-connect
 A Node.js module to create a simple API for the baby-connect web site
 
@@ -9,7 +33,7 @@ repository.
 Since this module uses the [Nightmare](http://www.nightmarejs.org/) library to
 perform browser automation as its means of interacting with Baby Connect, any
 changes that are made to the Baby Connect web site down the line may render this
-module useless. 
+module useless.
 
 ## Motivation
 Many people love playing with software and technology. Many of these people have
